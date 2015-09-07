@@ -4,30 +4,31 @@ require "position"
 describe Position do
   describe "#new" do
 
-    it "is initialized at x == 0 to 4" do
-      for x in 0..4
-        expect(Position.new(x, 0).is_valid?).to be true
+    context "when initialized with valid values" do
+      it "is on the table" do
+        for i in 0..4
+          expect(Position.new(i, i).is_on_table?).to be true
+        end
       end
     end
 
-    it "is not initialized for invalid y values" do
-      invalid_x_values = [-1,10,5]
-      invalid_x_values.each do |x|
-        expect(Position.new(x, 0).is_valid?).to be false
+    context "when initialized with invalid values" do
+
+      it "is not on the table for invalid x values" do
+        invalid_values = [[-1, 2],[10, 2],[5, 2],[2, -1],[2, 10],[2, 5]]
+        invalid_values.each do |p|
+          expect(Position.new(p[0], p[1]).is_on_table?).to be false
+        end
       end
+
     end
 
-    it "is initialized at y == 0 to 4" do
-      for y in 0..4
-        expect(Position.new(0, y).is_valid?).to be true
-      end
-    end
+    context "when initialized at the Origin" do
 
-    it "is not initialized for invalid y values" do
-      invalid_y_values = [-1,10,5]
-      invalid_y_values.each do |y|
-        expect(Position.new(0, y).is_valid?).to be false
+      it "position == 0, 0" do
+        expect(Position::ORIGIN).to eq Position.new(0, 0)
       end
+
     end
   end
 end

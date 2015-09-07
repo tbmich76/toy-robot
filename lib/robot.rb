@@ -1,22 +1,46 @@
+require_relative "robot_state"
+require_relative "position"
+require_relative "cardinal_points"
+
 class Robot
-  attr_reader :position, :state
+  attr_reader :state
 
   def initialize
     @state = RobotState.new
   end
 
   public
-  def handleCommand(command, *args)
-    puts "#{command}: x: #{args[0]}, y: #{args[1]}, f: #{args[2]}"
-    case command.downcase
+  def handleCommand(input)
+    tokens = input.downcase.split(" ")
+    command = tokens[0]
+    case command
     when "place"
-      @state.place(args[0],args[1],args[2])
+      args = tokens[1].split(",")
+      position = Position.new(args[0].to_i, args[1].to_i)
+      @state.place(position, args[2].upcase)
     when "move"
       @state.move
+    when "left"
+      @state.left
+    when "right"
+      @state.right
+    when "report"
+      report
     end
   end
 
   def report
-    puts "#{@state.position.x},#{@state.position.y},#{@state.orientation}"
+    return unless @state.is_placed?
+
+    puts "#{@state.position.x},#{@state.position.y},#{@state.facing}"
   end
+end
+
+if (ARGV.length == 2 && ARGV[0].downcase == "--filename")
+  robot = Robot.new
+  file = File.new(ARGV[1], "r")
+  while (line = file.gets)
+    robot.handleCommand(line)
+  end
+  file.close
 end

@@ -5,66 +5,60 @@ require "position"
 
 describe Robot do
 
-  describe "#place" do
+  describe "#handleCommand" do
 
-    before(:each) do
-      @robot = Robot.new
-      @robot.handleCommand("PLACE", 0, 0, "NORTH")
+    context "when place is issued" do
+
+      it "reports correct position and facing direction" do
+        robot = Robot.new
+        robot.handleCommand("PLACE 0,1,NORTH")
+        expect { robot.handleCommand("REPORT") }.to output("0,1,NORTH\n").to_stdout
+      end
+
     end
 
-    it "#place" do
-      expect(@robot.state.position).to eq(Position.new(0,0))
+    context "when move is issued" do
+
+      it "reports correct position and direction facing" do
+        robot = Robot.new
+        robot.handleCommand("PLACE 0,1,EAST")
+        robot.handleCommand("MOVE")
+        expect { robot.handleCommand("REPORT") }.to output("1,1,EAST\n").to_stdout
+      end
+
     end
 
-    it "#place" do
-      expect(@robot.state.orientation).to eq("NORTH")
+    context "when left is issued" do
+
+      it "reports correct position and direction facing" do
+        robot = Robot.new
+        robot.handleCommand("PLACE 0,1,EAST")
+        robot.handleCommand("LEFT")
+        expect { robot.handleCommand("REPORT") }.to output("0,1,NORTH\n").to_stdout
+      end
+
     end
 
-  end
+    context "when right is issued" do
 
-  describe "#report" do
+      it "reports correct position and direction facing" do
+        robot = Robot.new
+        robot.handleCommand("PLACE 0,1,EAST")
+        robot.handleCommand("RIGHT")
+        expect { robot.handleCommand("REPORT") }.to output("0,1,SOUTH\n").to_stdout
+      end
 
-    it "#report" do
-      robot = Robot.new
-      robot.handleCommand("PLACE", 0, 1, "NORTH")
-      expect { robot.report }.to output("0,1,NORTH\n").to_stdout
     end
 
-  end
+    context "when report is issued before a place has been issued" do
 
-  describe "#move" do
+      it "ignores command" do
+        robot = Robot.new
+        expect { robot.handleCommand("REPORT") }.to output("").to_stdout
+      end
 
-    before(:each) do
-      @robot = Robot.new
-      @robot.handleCommand("PLACE", 0, 0, "NORTH")
-      @robot.handleCommand("MOVE")
-    end
-
-    it "#moves to the correct position" do
-      expect(@robot.state.position).to eq(Position.new(0,1))
-    end
-
-    it "is facing the right direction" do
-      expect(@robot.state.orientation).to eq("NORTH")
-    end
-
-  end
-
-  describe "#move south" do
-
-    before(:each) do
-      @robot = Robot.new
-      @robot.handleCommand("PLACE", 0, 2, "SOUTH")
-      @robot.handleCommand("MOVE")
-    end
-
-    it "#move" do
-      expect(@robot.state.position).to eq(Position.new(0,1))
-    end
-
-    it "#move" do
-      expect(@robot.state.orientation).to eq("SOUTH")
     end
 
   end
+
 end
