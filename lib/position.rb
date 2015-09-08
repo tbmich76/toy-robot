@@ -8,6 +8,13 @@ class Position
            [3,0],[3,1],[3,2],[3,3],[3,4],
            [4,0],[4,1],[4,2],[4,3],[4,4]]
 
+  CARDINAL_POINTS = [ :north, :east, :west, :south ]
+
+  FACING_NORTH = :north
+  FACING_EAST = :east
+  FACING_SOUTH = :south
+  FACING_WEST = :west
+
   def initialize(x,y)
     @x = x.to_i
     @y = y.to_i

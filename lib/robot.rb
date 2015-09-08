@@ -1,12 +1,12 @@
-require_relative "robot_state"
+require_relative "unplaced_state"
+require_relative "placed_state"
 require_relative "position"
-require_relative "cardinal_points"
 
 class Robot
-  attr_reader :state
+  attr_accessor :state
 
   def initialize
-    @state = RobotState.new
+    @state = UnplacedState.new(self)
   end
 
   public
@@ -17,7 +17,7 @@ class Robot
     when "place"
       args = tokens[1].split(",")
       position = Position.new(args[0].to_i, args[1].to_i)
-      @state.place(position, args[2].upcase)
+      @state.place(position, args[2].downcase.intern)
     when "move"
       @state.move
     when "left"
@@ -30,9 +30,9 @@ class Robot
   end
 
   def report
-    return unless @state.is_placed?
+    return if @state.is_a?(UnplacedState)
 
-    puts "#{@state.position.x},#{@state.position.y},#{@state.facing}"
+    puts "#{@state.position.x},#{@state.position.y},#{@state.facing.to_s.upcase}"
   end
 end
 

@@ -1,7 +1,5 @@
 require "spec_helper"
 require "robot"
-require "robot_state"
-require "position"
 
 describe Robot do
 
